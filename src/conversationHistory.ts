@@ -32,7 +32,7 @@ export class ConversationHistory {
         const chatMessages = messages as ChatMessage[];
         // Find the last summary message index
         const lastSummaryIndex = chatMessages.reduce((lastIndex, msg, index) => {
-          if (msg.role === 'assistant' && msg.content.startsWith('[Суммаризация сессии]:')) {
+          if (msg.role === 'system' && msg.content.startsWith('[Суммаризация сессии]:')) {
             return index;
           }
           return lastIndex;
@@ -45,7 +45,7 @@ export class ConversationHistory {
         return acc;
       }, {} as { [key: number]: ConversationState });
       console.log('Conversation history loaded successfully');
-	  console.log(this.history);
+      console.dir(this.history);
     } catch (error) {
       console.error('Error loading conversation history:', error);
       this.history = {};
@@ -116,15 +116,15 @@ export class ConversationHistory {
         // Keep only system prompt and summaries
         const systemPrompt = state.messages[0]; // Keep the system prompt
         const summaries = state.messages.filter(msg => 
-          msg.role === 'assistant' && msg.content.startsWith('[Суммаризация сессии]:')
+          msg.role === 'system' && msg.content.startsWith('[Суммаризация сессии]:')
         );
         
         // Create new history with only system prompt and summaries
         state.messages = [systemPrompt, ...summaries];
         
-        // Add new summary
+        // Add new summary as system message
         await this.addMessage(chatId, { 
-          role: "assistant", 
+          role: "system", 
           content: `[Суммаризация сессии]: ${summary}` 
         });
         
