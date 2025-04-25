@@ -61,7 +61,15 @@ bot.on('message', async (msg: TelegramBot.Message) => {
   const chatId = msg.chat.id;
   const userMessage = msg.text;
 
-  if (!userMessage) return;
+  if (!userMessage) {
+	return;
+  }
+
+  const isCommandMessage = userMessage.startsWith('/');
+
+  if (isCommandMessage) {
+    return;
+  }
 
   try {
     // Initialize conversation history for new users
@@ -72,6 +80,7 @@ bot.on('message', async (msg: TelegramBot.Message) => {
     // Add user message to history
     await conversationHistory.addMessage(chatId, { role: "user", content: userMessage });
 
+	console.log(conversationHistory.getHistory(chatId));
     const completion = await openai.chat.completions.create({
       model: "gpt-4.1",
       messages: conversationHistory.getHistory(chatId),

@@ -29,13 +29,23 @@ export class ConversationHistory {
       const data = await this.storage.loadConversations();
       // Convert old format to new format if needed
       this.history = Object.entries(data).reduce((acc, [chatId, messages]) => {
+        const chatMessages = messages as ChatMessage[];
+        // Find the last summary message index
+        const lastSummaryIndex = chatMessages.reduce((lastIndex, msg, index) => {
+          if (msg.role === 'assistant' && msg.content.startsWith('[Суммаризация сессии]:')) {
+            return index;
+          }
+          return lastIndex;
+        }, -1);
+
         acc[Number(chatId)] = {
-          messages: messages as ChatMessage[],
-          lastSummarizedIndex: -1 // Initialize as -1 to indicate no summaries yet
+          messages: chatMessages,
+          lastSummarizedIndex: lastSummaryIndex
         };
         return acc;
       }, {} as { [key: number]: ConversationState });
       console.log('Conversation history loaded successfully');
+	  console.log(this.history);
     } catch (error) {
       console.error('Error loading conversation history:', error);
       this.history = {};
