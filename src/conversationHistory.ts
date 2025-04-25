@@ -103,14 +103,23 @@ export class ConversationHistory {
 
       const summary = completion.choices[0].message?.content;
       if (summary) {
-        // Add summary to history
+        // Keep only system prompt and summaries
+        const systemPrompt = state.messages[0]; // Keep the system prompt
+        const summaries = state.messages.filter(msg => 
+          msg.role === 'assistant' && msg.content.startsWith('[Суммаризация сессии]:')
+        );
+        
+        // Create new history with only system prompt and summaries
+        state.messages = [systemPrompt, ...summaries];
+        
+        // Add new summary
         await this.addMessage(chatId, { 
           role: "assistant", 
           content: `[Суммаризация сессии]: ${summary}` 
         });
         
-        // Update last summarized index
-        state.lastSummarizedIndex = state.messages.length - 2; // -2 because we just added the summary
+        // Update last summarized index to the end of the new history
+        state.lastSummarizedIndex = state.messages.length - 1;
         await this.saveHistory();
         
         return summary;

@@ -48,7 +48,7 @@ bot.on('voice', async (msg: TelegramBot.Message) => {
     if (response) {
       // Add assistant response to history
       await conversationHistory.addMessage(chatId, { role: "assistant", content: response });
-      bot.sendMessage(chatId, response);
+      bot.sendMessage(chatId, response, { parse_mode: 'MarkdownV2' });
     }
   } catch (error) {
     console.error('Error processing voice message:', error);
@@ -86,7 +86,7 @@ bot.on('message', async (msg: TelegramBot.Message) => {
     if (response) {
       // Add assistant response to history
       await conversationHistory.addMessage(chatId, { role: "assistant", content: response });
-      bot.sendMessage(chatId, response);
+      bot.sendMessage(chatId, response, { parse_mode: 'MarkdownV2' });
     }
   } catch (error) {
     console.error('Error:', error);
@@ -125,7 +125,8 @@ bot.onText(/\/end/, async (msg: TelegramBot.Message) => {
     if (summary) {
       bot.sendMessage(
         chatId,
-        'Спасибо за сессию! Вот краткое резюме нашего разговора:\n\n' + summary
+        'Спасибо за сессию! Вот краткое резюме нашего разговора:\n\n' + summary,
+		{ parse_mode: 'MarkdownV2' }
       );
     } else {
       bot.sendMessage(
