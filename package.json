@@ -1,10 +1,13 @@
 {
-  "name": "sec",
+  "name": "telegram-psychologist-bot",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Telegram bot for psychological guidance using OpenAI",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "dev": "ts-node src/index.ts",
+    "watch": "tsc -w"
   },
   "keywords": [],
   "author": "",

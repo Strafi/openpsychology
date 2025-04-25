@@ -11,6 +11,9 @@ RUN npm install
 # Bundle app source
 COPY . .
 
+# Build TypeScript code
+RUN npm run build
+
 # Create directory for persistent storage
 RUN mkdir -p /usr/src/app/data
 
