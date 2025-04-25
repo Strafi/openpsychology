@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  bot:
+    build: .
+    container_name: telegram-psychologist-bot
+    restart: unless-stopped
+    volumes:
+      - ./data:/usr/src/app/data
+    env_file:
+      - .env 
